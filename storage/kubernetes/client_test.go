@@ -16,6 +16,15 @@ import (
 	"github.com/dexidp/dex/storage/kubernetes/k8sapi"
 )
 
+func TestIdToName(t *testing.T) {
+	h := func() hash.Hash { return fnv.New64() }
+
+	name := idToName("fb407785-2479-4216-94a7-27f4e031e134", h)
+	if len(name) > kubeResourceMaxLen {
+		t.Errorf("Expected length of hashed clientId not to exceed max resource length for k8s resources. Length was %d", len(name))
+	}
+}
+
 // This test does not have an explicit error condition but is used
 // with the race detector to detect the safety of idToName.
 func TestIDToName(t *testing.T) {
